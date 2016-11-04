@@ -1,0 +1,5 @@
+solutions
+.ipynb_checkpoints
+__pycache__
+bvlc-alexnet.npy
+train.p

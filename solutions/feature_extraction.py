@@ -13,22 +13,27 @@ nb_classes = 43
 x = tf.placeholder(tf.float32, (None, 32, 32, 3))
 resized = tf.image.resize_images(x, (227, 227))
 
-# TODO: setup AlexNet for feature extraction and
+# TODO: Setup AlexNet for feature extraction and
 # define the last layer.
-fc7 = alexnet(..., feature_extract=True)
-
-# TODO: assign the softmax of the logits to probs
-probs = ...
+# Returns the second final layer of the AlexNet model,
+# this allows us to redo the last layer for the traffic signs
+# model.
+fc7 = alexnet(resized, feature_extract=True)
+shape = (fc7.get_shape().as_list()[-1], nb_classes)
+fc8W = tf.Variable(tf.truncated_normal(shape, stddev=1e-2))
+fc8b = tf.Variable(tf.zeros(nb_classes))
+logits = tf.nn.xw_plus_b(fc7, fc8W, fc8b)
+probs = tf.nn.softmax(logits)
 
 init = tf.initialize_all_variables()
 sess = tf.Session()
 sess.run(init)
 
 # Read Images
-im1 = (imread("./construction.jpg")[:, :, :3]).astype(np.float32)
+im1 = (imread("construction.jpg")[:, :, :3]).astype(np.float32)
 im1 = im1 - np.mean(im1)
 
-im2 = (imread("./stop.jpg")[:, :, :3]).astype(np.float32)
+im2 = (imread("stop.jpg")[:, :, :3]).astype(np.float32)
 im2 = im2 - np.mean(im2)
 
 # Run Inference
@@ -44,4 +49,4 @@ for input_im_ind in range(output.shape[0]):
         print("%s: %.3f" % (sign_names.ix[inds[-1 - i]][1], output[input_im_ind, inds[-1 - i]]))
     print()
 
-print("Time: %.3f seconds" % (time.time() - t))
+print("Time: %.3f seconds" % (time.time() - t)

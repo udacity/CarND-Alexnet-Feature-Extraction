@@ -9,9 +9,8 @@ from alexnet import alexnet
 
 # placeholders
 x = tf.placeholder(tf.float32, (None, 227, 227, 3))
-resized = tf.image.resize_images(x, (227, 227))
 
-probs = alexnet(resized)
+probs = alexnet(x)
 init = tf.initialize_all_variables()
 sess = tf.Session()
 sess.run(init)

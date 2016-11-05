@@ -10,11 +10,12 @@ from scipy.misc import imread
 from caffe_classes import class_names
 from alexnet import alexnet
 
-# TODO: alter placeholder for images size and add resize operation
-x = tf.placeholder(tf.float32, (None, 227, 227, 3))
 
-probs = alexnet(...)
+# placeholders
+x = tf.placeholder(tf.float32, (None, 32, 32, 3))
+resized = tf.image.resize_images(x, (227, 227))
 
+probs = alexnet(resized)
 init = tf.initialize_all_variables()
 sess = tf.Session()
 sess.run(init)

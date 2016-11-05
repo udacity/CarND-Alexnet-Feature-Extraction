@@ -3,22 +3,18 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 from scipy.misc import imread
-from caffe_classes import class_names
-from alexnet import alexnet
+from alexnet import AlexNet
 
 sign_names = pd.read_csv('signnames.csv')
 nb_classes = 43
 
-# TODO: define placeholders and resize operation
 x = tf.placeholder(tf.float32, (None, 32, 32, 3))
 resized = tf.image.resize_images(x, (227, 227))
 
-# TODO: Setup AlexNet for feature extraction and
-# define the last layer.
 # Returns the second final layer of the AlexNet model,
 # this allows us to redo the last layer for the traffic signs
 # model.
-fc7 = alexnet(resized, feature_extract=True)
+fc7 = AlexNet(resized, feature_extract=True)
 shape = (fc7.get_shape().as_list()[-1], nb_classes)
 fc8W = tf.Variable(tf.truncated_normal(shape, stddev=1e-2))
 fc8b = tf.Variable(tf.zeros(nb_classes))
@@ -45,8 +41,7 @@ for input_im_ind in range(output.shape[0]):
     inds = np.argsort(output)[input_im_ind, :]
     print("Image", input_im_ind)
     for i in range(5):
-        print("%s: %.3f" % (class_names[inds[-1 - i]], output[input_im_ind, inds[-1 - i]]))
         print("%s: %.3f" % (sign_names.ix[inds[-1 - i]][1], output[input_im_ind, inds[-1 - i]]))
     print()
 
-print("Time: %.3f seconds" % (time.time() - t)
+print("Time: %.3f seconds" % (time.time() - t))

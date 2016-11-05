@@ -4,13 +4,13 @@ import tensorflow as tf
 import numpy as np
 from scipy.misc import imread
 from caffe_classes import class_names
-from alexnet import alexnet
+from alexnet import AlexNet
 
 
 # placeholders
 x = tf.placeholder(tf.float32, (None, 227, 227, 3))
 
-probs = alexnet(x)
+probs = AlexNet(x)
 init = tf.initialize_all_variables()
 sess = tf.Session()
 sess.run(init)

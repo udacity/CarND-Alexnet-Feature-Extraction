@@ -1,7 +1,7 @@
 import pickle
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from alexnet import alexnet
+from alexnet import AlexNet
 
 # TODO: load data
 
@@ -12,7 +12,7 @@ from alexnet import alexnet
 # Returns the second final layer of the AlexNet model,
 # this allows us to redo the last layer for the traffic signs
 # model.
-fc7 = alexnet(..., feature_extract=True)
+fc7 = AlexNet(..., feature_extract=True)
 
 # TODO: add the final layer for traffic sign classification
 

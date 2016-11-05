@@ -8,14 +8,14 @@ import tensorflow as tf
 import numpy as np
 from scipy.misc import imread
 from caffe_classes import class_names
-from alexnet import alexnet
+from alexnet import AlexNet
 
 
 # placeholders
 x = tf.placeholder(tf.float32, (None, 32, 32, 3))
 resized = tf.image.resize_images(x, (227, 227))
 
-probs = alexnet(resized)
+probs = AlexNet(resized)
 init = tf.initialize_all_variables()
 sess = tf.Session()
 sess.run(init)

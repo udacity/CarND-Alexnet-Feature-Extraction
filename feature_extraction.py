@@ -3,8 +3,7 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 from scipy.misc import imread
-from caffe_classes import class_names
-from alexnet import alexnet
+from alexnet import AlexNet
 
 sign_names = pd.read_csv('signnames.csv')
 nb_classes = 43
@@ -15,7 +14,7 @@ resized = tf.image.resize_images(x, (227, 227))
 
 # TODO: setup AlexNet for feature extraction and
 # define the last layer.
-fc7 = alexnet(..., feature_extract=True)
+fc7 = AlexNet(..., feature_extract=True)
 
 # TODO: assign the softmax of the logits to probs
 probs = ...
@@ -40,7 +39,6 @@ for input_im_ind in range(output.shape[0]):
     inds = np.argsort(output)[input_im_ind, :]
     print("Image", input_im_ind)
     for i in range(5):
-        print("%s: %.3f" % (class_names[inds[-1 - i]], output[input_im_ind, inds[-1 - i]]))
         print("%s: %.3f" % (sign_names.ix[inds[-1 - i]][1], output[input_im_ind, inds[-1 - i]]))
     print()
 

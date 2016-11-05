@@ -22,7 +22,7 @@ def conv(input, kernel, biases, k_h, k_w, c_o, s_h, s_w,  padding="VALID", group
     return tf.reshape(tf.nn.bias_add(conv, biases), [-1] + conv.get_shape().as_list()[1:])
 
 
-def alexnet(features, feature_extract=False):
+def AlexNet(features, feature_extract=False):
     """
     Builds an AlexNet model, loads pretrained weights
     """

@@ -3,6 +3,7 @@ import tensorflow as tf
 
 net_data = np.load("bvlc-alexnet.npy", encoding="latin1").item()
 
+
 def conv(input, kernel, biases, k_h, k_w, c_o, s_h, s_w,  padding="VALID", group=1):
     '''
     From https://github.com/ethereon/caffe-tensorflow
@@ -146,10 +147,7 @@ def AlexNet(features, feature_extract=False):
     fc7 = tf.nn.relu_layer(fc6, fc7W, fc7b)
 
     if feature_extract:
-        # using `tf.stop_gradient` prevents the gradient
-        # from propagating backwards to any of the previous
-        # layers
-        return tf.stop_gradient(fc7)
+        return fc7
 
     # fc8
     # fc(1000, relu=False, name='fc8')

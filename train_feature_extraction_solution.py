@@ -2,6 +2,7 @@ import pickle
 import time
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
+from sklearn.utils import shuffle
 
 from alexnet import AlexNet
 
@@ -22,6 +23,7 @@ resized = tf.image.resize_images(features, (227, 227))
 # this allows us to redo the last layer for the traffic signs
 # model.
 fc7 = AlexNet(resized, feature_extract=True)
+fc7 = tf.stop_gradient(fc7)
 shape = (fc7.get_shape().as_list()[-1], nb_classes)
 fc8W = tf.Variable(tf.truncated_normal(shape, stddev=1e-2))
 fc8b = tf.Variable(tf.zeros(nb_classes))
@@ -34,7 +36,7 @@ train_op = opt.minimize(loss_op, var_list=[fc8W, fc8b])
 init_op = tf.initialize_all_variables()
 
 preds = tf.arg_max(logits, 1)
-accuracy = tf.reduce_mean(tf.cast(tf.equal(preds, labels), tf.float32))
+accuracy_op = tf.reduce_mean(tf.cast(tf.equal(preds, labels), tf.float32))
 
 
 def eval_on_data(X, y, sess):
@@ -46,7 +48,7 @@ def eval_on_data(X, y, sess):
         X_batch = X[offset:end]
         y_batch = y[offset:end]
 
-        loss, acc = sess.run([loss_op, accuracy], feed_dict={features: X_batch, labels: y_batch})
+        loss, acc = sess.run([loss_op, accuracy_op], feed_dict={features: X_batch, labels: y_batch})
         n += 1
         total_loss += loss
         total_acc += acc
@@ -58,6 +60,7 @@ with tf.Session() as sess:
 
     for i in range(epochs):
         # training
+        X_train, y_train = shuffle(X_train, y_train)
         t0 = time.time()
         for offset in range(0, X_train.shape[0], batch_size):
             end = offset + batch_size

@@ -40,7 +40,6 @@ accuracy_op = tf.reduce_mean(tf.cast(tf.equal(preds, labels), tf.float32))
 
 
 def eval_on_data(X, y, sess):
-    n = 0
     total_acc = 0
     total_loss = 0
     for offset in range(0, X.shape[0], batch_size):
@@ -49,11 +48,10 @@ def eval_on_data(X, y, sess):
         y_batch = y[offset:end]
 
         loss, acc = sess.run([loss_op, accuracy_op], feed_dict={features: X_batch, labels: y_batch})
-        n += 1
-        total_loss += loss
-        total_acc += acc
+        total_loss += (loss * X_batch.shape[0])
+        total_acc += (acc * X_batch.shape[0])
 
-    return total_loss/n, total_acc/n
+    return total_loss/X.shape[0], total_acc/X.shape[0]
 
 with tf.Session() as sess:
     sess.run(init_op)

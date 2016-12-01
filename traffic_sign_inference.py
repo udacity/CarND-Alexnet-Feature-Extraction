@@ -15,7 +15,7 @@ x = tf.placeholder(tf.float32, (None, 32, 32, 3))
 # HINT: Use `tf.image.resize_images` to resize the images
 resized = ...
 
-probs = AlexNet(resized, feature_extract=False)
+probs = AlexNet(resized)
 
 init = tf.initialize_all_variables()
 sess = tf.Session()

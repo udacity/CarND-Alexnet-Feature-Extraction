@@ -21,7 +21,7 @@ fc8b = tf.Variable(tf.zeros(nb_classes))
 logits = tf.nn.xw_plus_b(fc7, fc8W, fc8b)
 probs = tf.nn.softmax(logits)
 
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 sess = tf.Session()
 sess.run(init)
 

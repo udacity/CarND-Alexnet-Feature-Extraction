@@ -19,7 +19,7 @@ fc7 = AlexNet(resized, feature_extract=True)
 shape = (fc7.get_shape().as_list()[-1], nb_classes)  # use this shape for the weight matrix
 probs = ...
 
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 sess = tf.Session()
 sess.run(init)
 

@@ -14,7 +14,7 @@ x = tf.placeholder(tf.float32, (None, 227, 227, 3))
 # we indicate to keep the 1000 class final layer
 # originally used to train on ImageNet.
 probs = AlexNet(x, feature_extract=False)
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 sess = tf.Session()
 sess.run(init)
 

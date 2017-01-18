@@ -17,7 +17,7 @@ resized = ...
 
 probs = AlexNet(resized)
 
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 sess = tf.Session()
 sess.run(init)
 

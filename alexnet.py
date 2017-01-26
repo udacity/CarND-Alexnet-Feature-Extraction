@@ -16,14 +16,14 @@ def conv(input, kernel, biases, k_h, k_w, c_o, s_h, s_w,  padding="VALID", group
     if group == 1:
         conv = convolve(input, kernel)
     else:
-        if (tf.__version__ >= '0.12' ):
+        if (tf.__version__ > '0.12' ):
             input_groups = tf.split(input, group, 3)
             kernel_groups = tf.split(kernel, group, 3)
         else:
             input_groups = tf.split(3, group, input)
             kernel_groups = tf.split(3, group, kernel)
         output_groups = [convolve(i, k) for i, k in zip(input_groups, kernel_groups)]
-        if (tf.__version__ >= '0.12' ):
+        if (tf.__version__ > '0.12' ):
             conv = tf.concat(output_groups, 3)
         else:
             conv = tf.concat(3, output_groups)

@@ -10,4 +10,7 @@ Before you start the lab, you should first install:
 * NumPy
 * SciPy
 * matplotlib
+* Pillow
+
+You can run `pip install -r requirements.txt` to install them all at once
 

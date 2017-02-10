@@ -1,4 +1,6 @@
 tensorflow
+pandas
 scipy
+sklearn
 matplotlib
 Pillow

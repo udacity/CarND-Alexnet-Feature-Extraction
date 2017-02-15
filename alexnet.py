@@ -13,13 +13,22 @@ def conv(input, kernel, biases, k_h, k_w, c_o, s_h, s_w,  padding="VALID", group
     assert c_o % group == 0
     convolve = lambda i, k: tf.nn.conv2d(i, k, [1, s_h, s_w, 1], padding=padding)
 
-    if group == 1:
-        conv = convolve(input, kernel)
+    if tf.__version__ < "1.0.0":
+        if group == 1:
+            conv = convolve(input, kernel)
+        else:
+            input_groups = tf.split(3, group, input)
+            kernel_groups = tf.split(3, group, kernel)
+            output_groups = [convolve(i, k) for i, k in zip(input_groups, kernel_groups)]
+            conv = tf.concat(3, output_groups)
     else:
-        input_groups = tf.split(3, group, input)
-        kernel_groups = tf.split(3, group, kernel)
-        output_groups = [convolve(i, k) for i, k in zip(input_groups, kernel_groups)]
-        conv = tf.concat(3, output_groups)
+        if group == 1:
+            conv = convolve(input, kernel)
+        else:
+            input_groups = tf.split(input, group, 3)
+            kernel_groups = tf.split(kernel, group, 3)
+            output_groups = [convolve(i, k) for i, k in zip(input_groups, kernel_groups)]
+            conv = tf.concat(output_groups, 3)
     return tf.reshape(tf.nn.bias_add(conv, biases), [-1] + conv.get_shape().as_list()[1:])
 
 
@@ -134,27 +143,25 @@ def AlexNet(features, feature_extract=False):
     padding = 'VALID'
     maxpool5 = tf.nn.max_pool(conv5, ksize=[1, k_h, k_w, 1], strides=[1, s_h, s_w, 1], padding=padding)
 
-    # fc6
-    # fc(4096, name='fc6')
+    # fc6, 4096
     fc6W = tf.Variable(net_data["fc6"][0])
     fc6b = tf.Variable(net_data["fc6"][1])
-    fc6 = tf.nn.relu_layer(tf.reshape(maxpool5, [-1, int(np.prod(maxpool5.get_shape()[1:]))]), fc6W, fc6b)
+    flat5 = tf.reshape(maxpool5, [-1, int(np.prod(maxpool5.get_shape()[1:]))])
+    fc6 = tf.nn.relu(tf.matmul(flat5, fc6W) + fc6b)
 
-    # fc7
-    # fc(4096, name='fc7')
+    # fc7, 4096
     fc7W = tf.Variable(net_data["fc7"][0])
     fc7b = tf.Variable(net_data["fc7"][1])
-    fc7 = tf.nn.relu_layer(fc6, fc7W, fc7b)
+    fc7 = tf.nn.relu(tf.matmul(fc6, fc7W) + fc7b)
 
     if feature_extract:
         return fc7
 
-    # fc8
-    # fc(1000, relu=False, name='fc8')
+    # fc8, 1000
     fc8W = tf.Variable(net_data["fc8"][0])
     fc8b = tf.Variable(net_data["fc8"][1])
 
-    logits = tf.nn.xw_plus_b(fc7, fc8W, fc8b)
+    logits = tf.matmul(fc7, fc8W) + fc8b
     probabilities = tf.nn.softmax(logits)
 
     return probabilities

@@ -2,7 +2,7 @@
 import time
 import tensorflow as tf
 import numpy as np
-from scipy.misc import imread
+from matplotlib.pyplot import imread
 from caffe_classes import class_names
 from alexnet import AlexNet
 
@@ -19,10 +19,10 @@ sess = tf.Session()
 sess.run(init)
 
 # Read Images
-im1 = (imread("poodle.png")[:, :, :3]).astype(np.float32)
+im1 = (imread("poodle.png")[:, :, :3] * 255).astype(np.float32)
 im1 = im1 - np.mean(im1)
 
-im2 = (imread("weasel.png")[:, :, :3]).astype(np.float32)
+im2 = (imread("weasel.png")[:, :, :3] * 255).astype(np.float32)
 im2 = im2 - np.mean(im2)
 
 # Run Inference

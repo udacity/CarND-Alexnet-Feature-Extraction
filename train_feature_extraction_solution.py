@@ -29,7 +29,8 @@ fc8W = tf.Variable(tf.truncated_normal(shape, stddev=1e-2))
 fc8b = tf.Variable(tf.zeros(nb_classes))
 logits = tf.nn.xw_plus_b(fc7, fc8W, fc8b)
 
-cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, labels)
+cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits = logits,
+        labels = labels)
 loss_op = tf.reduce_mean(cross_entropy)
 opt = tf.train.AdamOptimizer()
 train_op = opt.minimize(loss_op, var_list=[fc8W, fc8b])

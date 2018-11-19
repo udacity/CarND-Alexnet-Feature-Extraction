@@ -18,7 +18,7 @@ fc7 = AlexNet(resized, feature_extract=True)
 shape = (fc7.get_shape().as_list()[-1], nb_classes)
 fc8W = tf.Variable(tf.truncated_normal(shape, stddev=1e-2))
 fc8b = tf.Variable(tf.zeros(nb_classes))
-logits = tf.nn.xw_plus_b(fc7, fc8W, fc8b)
+logits = tf.matmul(fc7, fc8W) + fc8b
 probs = tf.nn.softmax(logits)
 
 init = tf.global_variables_initializer()

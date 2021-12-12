@@ -45,7 +45,7 @@ def AlexNet(features, feature_extract=False):
     s_w = 4
     conv1W = tf.Variable(net_data["conv1"][0])
     conv1b = tf.Variable(net_data["conv1"][1])
-    conv1_in = conv(features, conv1W, conv1b, k_h, k_w, c_o, s_h, s_w, padding="SAME", group=1)
+    conv1_in = conv(features, conv1W, conv1b, k_h, k_w, c_o, s_h, s_w, padding="VALID", group=1)
     conv1 = tf.nn.relu(conv1_in)
 
     # lrn1
